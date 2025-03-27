@@ -10,19 +10,18 @@ import 'tailwindcss';
 const App: React.FC = () =>{
   const [subject, setSubject] = useState<string>("");
   const [expertise, setExpertise] = useState<ExpertiseLevelsType | null>(null);
+  const [firstMessage, setFirstMessage] = useState<string>("");
 
-  const handleSubmit = () => {
+  async function handleSubmit() {
     if (!subject || !expertise){
       alert("Please select a subject and expertise level");
       return;
     }
-    alert(`You have selected ${expertise} and ${subject}`);
-    AskAI(subject, expertise).then((response) =>{
-      for (const response1 of response){
-        alert(response1);
-      }
-    });
+    const response = await AskAI(subject, expertise);
+    setFirstMessage(response);
   };
+
+  
   return (
     <div className="App">
       <header className="App-header">
@@ -32,6 +31,9 @@ const App: React.FC = () =>{
         <Subject onChange={setSubject} initialValue={subject}/>
         <Expertise onChange={setExpertise} initialValue={expertise}/>
         <button onClick={handleSubmit}>Submit</button>
+        <div className="First-Message">
+          {firstMessage}
+        </div>
       </header>
     </div>
   );

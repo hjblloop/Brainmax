@@ -28,8 +28,16 @@ app.post('/api/ask', async (req, res) => {
     // } catch (error: any) {
     //     res.status(500).json( { error: error.message });
     // }
-    const messages = req.body;
-    return messages;
+    try {
+        console.log("this is server");
+        const messages = req.body;
+        const returnMessages = "Expertise: " + messages.expertise + " Subject: " + messages.subject;
+        res.json(returnMessages);
+    }
+    catch (error: any) {
+        console.log("this is server error");
+        res.status(500).json( {error: error.message });
+    }
 });
 
 app.get('/api/users', async (req, res) => {

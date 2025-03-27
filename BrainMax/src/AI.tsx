@@ -12,9 +12,11 @@ const AskAI = async (subject: string, expertise: ExpertiseLevelsType | null) => 
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 'subject': subject,
-                'expertise': expertise}),
+                'expertise': expertise
+            }),
         });
-        return response.json();
+        const data = await response.text();
+        return data;
     }
     catch (error: any) {
         return `Error: ${error.message}`;

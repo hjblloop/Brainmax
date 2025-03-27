@@ -4,8 +4,8 @@
     {
       "label": "tsc: build - server", // Task name referenced in launch.json
       "type": "shell", // Use a shell task
-      "command": "npx tsc", // Run the TypeScript compiler
-      "args": [], // No additional arguments
+      "command": "npx", // Use npx to run tsc
+      "args": ["tsc", "-p", "./server/tsconfig.json"], // Use npm exec to run tsc
       "problemMatcher": ["$tsc"], // Use TypeScript's problem matcher
       "group": {
         "kind": "build",
