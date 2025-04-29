@@ -38,7 +38,7 @@ const Expertise: React.FC<ExpertiseLevelProps> = ({onChange, initialValue = null
                     }
                     hover:shadow-md
                 `}
-            >
+                >
                 {expertiseOption.label}
                 </div>
                 ))}
