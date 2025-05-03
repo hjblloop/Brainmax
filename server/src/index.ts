@@ -50,12 +50,12 @@ app.post('/api/ask', async (req, res) => {
     // }
 });
 
-app.post('/api/learn', (req, res) => {
+app.post('/api/learn', async (req, res) => {
     const { L, E, A, R, N, date } = req.body;
 
     try {
         const result = await pool.query(
-            'INSERT INTO LEARN_data (L, E, A, R, N, date) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+            'INSERT INTO learn_data (l, e, a, r, n, date) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
             [L, E, A, R, N, date]
         );
 
@@ -63,7 +63,7 @@ app.post('/api/learn', (req, res) => {
 
         res.status(201).json({ message: 'Data saved successfully', data: result.rows[0]});
     } catch (err: any) {
-        console.error('Error saving data to database:', err.mesage);
+        console.error('Error saving data to database:', err.message);
         res.status(500).json({ error: 'Error saving data to database' });
     }
 });

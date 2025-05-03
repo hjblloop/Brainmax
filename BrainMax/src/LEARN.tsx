@@ -11,15 +11,6 @@ const LEARN = () => {
         R: '',
         N: ''
     });
-    const [animate, setAnimate] = useState(false);
-
-    const handleMoveLine = () => {
-        setAnimate(true);
-
-        setTimeout(() => {
-            setAnimate(false);
-        }, 5000);
-    };
 
     const handleLEARNChange = (letter: string, value: string) => {
         setLEARN((prev) => ({
@@ -48,10 +39,10 @@ const LEARN = () => {
             if (response.ok) {
                 alert('Thanks for learning!');
             } else {
-                alert('Oops!!!!');
+                alert('Error: ');
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error: ', error);
             alert('couldnt connect to server');
         }
     };
