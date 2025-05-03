@@ -18,7 +18,7 @@ const LEARN = () => {
 
         setTimeout(() => {
             setAnimate(false);
-        }, 10000);
+        }, 5000);
     };
 
     const handleLEARNChange = (letter: string, value: string) => {
@@ -86,10 +86,6 @@ const LEARN = () => {
                 explanation="What will you do next?"
                 onChange={(value: string) => handleLEARNChange('N', value)} />
             <button className="LEARN-button" onClick={handleLEARNClick}>Learned</button>
-            <div className="moving-line-container">
-                <div className={`line ${animate ? 'animate-line' : ''}`}></div>
-                <button onClick={handleMoveLine} className="move-line-button">Move Line</button>
-            </div>
         </div>
     );
 }
