@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import LEARNBlocks from './basic_materials/LEARNBlocks';
 import './LEARN.css';
@@ -12,12 +12,46 @@ const LEARN = () => {
         N: ''
     });
 
+    const [retrievedLEARNData, setRetrievedLEARNData] = useState<{
+        l: string;
+        e: string;
+        a: string;
+        r: string;
+        n: string;
+    } | null>(null);
+
     const handleLEARNChange = (letter: string, value: string) => {
         setLEARN((prev) => ({
             ...prev,
             [letter]: value,
         }));
     };
+
+    const fetchLEARNData = async () => {
+        try {
+            const response = await fetch(`http://localhost:5001/api/learn/${today}`);
+            if (response.ok) {
+                const data = await response.json();
+                setRetrievedLEARNData(data);
+                setLEARN({
+                    L: data.l,
+                    E: data.e,
+                    A: data.a,
+                    R: data.r,
+                    N: data.n
+                });
+            } else {
+                alert('No data found');
+            }
+        } catch (error) {
+            console.error('Error fetching LEARN data: ', error);
+            alert('Error fetching LEARN data');
+        }
+    };
+
+    useEffect(() => {
+        fetchLEARNData();
+    }, []);
 
     const today = new Date().toISOString().split('T')[0];
 
@@ -77,8 +111,19 @@ const LEARN = () => {
                 explanation="What will you do next?"
                 onChange={(value: string) => handleLEARNChange('N', value)} />
             <button className="LEARN-button" onClick={handleLEARNClick}>Learned</button>
+
+            {retrievedLEARNData && (
+            <div className="retrieved-data">
+                <h3>Retrieved Data for {today}:</h3>
+                <p>L: {retrievedLEARNData.l}</p>
+                <p>E: {retrievedLEARNData.e}</p>
+                <p>A: {retrievedLEARNData.a}</p>
+                <p>R: {retrievedLEARNData.r}</p>
+                <p>N: {retrievedLEARNData.n}</p>
+            </div>
+        )}
         </div>
     );
-}
+};
 
 export default LEARN;

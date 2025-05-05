@@ -55,7 +55,17 @@ app.post('/api/learn', async (req, res) => {
 
     try {
         const result = await pool.query(
-            'INSERT INTO learn_data (l, e, a, r, n, date) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+            `INSERT INTO learn_data (l, e, a, r, n, date) 
+            VALUES ($1, $2, $3, $4, $5, $6) 
+            ON CONFLICT (date)
+            DO UPDATE SET
+                l = EXCLUDED.l,
+                e = EXCLUDED.e,
+                a = EXCLUDED.a,
+                r = EXCLUDED.r,
+                n = EXCLUDED.n
+            RETURNING *;
+            `,
             [L, E, A, R, N, date]
         );
 
@@ -74,6 +84,25 @@ app.get('/api/users', async (req, res) => {
         res.json(result.rows);
     } catch (err: any) {
         res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/learn/:date', async (req, res) => {
+    const {date} = req.params;
+
+    try {
+        const result = await pool.query('SELECT * FROM learn_data WHERE date = $1', [date]);
+
+        if (result.rows.length === 0) {
+            res.status(404).json({ error: 'No data found for date' });
+        }
+        else {
+            res.json(result.rows[0]);
+        }
+
+    } catch (err: any) {
+        console.error('Error retrieving data: ', err.message);;
+        res.status(500).json({ error: 'Error retrieving data' });
     }
 });
 
