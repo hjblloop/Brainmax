@@ -87,6 +87,19 @@ app.get('/api/users', async (req, res) => {
     }
 });
 
+app.get('/api/getdates', async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT date
+            FROM learn_data
+            WHERE date>= CURRENT_DATE - INTERVAL '7 days'
+            ORDER BY date DESC;`)
+        res.status(201).json(result.rows);
+    } catch (err: any) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 app.get('/api/learn/:date', async (req, res) => {
     const {date} = req.params;
 
