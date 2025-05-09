@@ -13,9 +13,11 @@ const Expertise: React.FC<ExpertiseLevelProps> = ({onChange, initialValue = null
     }
 
     const expertiseOptions = [
-        { value: ExpertiseLevels.Beginner, label: 'Beginner', color: 'bg-green-100 border-green-500' },
-        { value: ExpertiseLevels.Intermediate, label: 'Intermediate', color: 'bg-blue-100 border-blue-500'},
-        { value: ExpertiseLevels.Advanced, label: 'Advanced', color: 'bg-red-100 border-red-500'},
+        { value: ExpertiseLevels.elementary, label: 'K-5', color: 'bg-green-100 border-green-500' },
+        { value: ExpertiseLevels.middle, label: '6-8', color: 'bg-blue-100 border-blue-500'},
+        { value: ExpertiseLevels.high, label: '9-12', color: 'bg-red-100 border-red-500'},
+        { value: ExpertiseLevels.undergrad, label: 'Undergraduate', color: 'bg-red-100 border-red-500'},
+        { value: ExpertiseLevels.grad, label: 'Graduate', color: 'bg-red-100 border-red-500'},
       ];
     
       return (

@@ -1,7 +1,9 @@
 export const ExpertiseLevels = {
-    Beginner: 'Beginner',
-    Intermediate: 'Intermediate',
-    Advanced: 'Advanced'
+    elementary: 'elementary school',
+    middle: 'middle school',
+    high: 'high school',
+    undergrad: "undergraduate",
+    grad: "graduate"
 } as const; // Define the type for expertise levels
 
 export type ExpertiseLevelsType = typeof ExpertiseLevels[keyof typeof ExpertiseLevels];

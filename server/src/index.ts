@@ -24,7 +24,7 @@ app.post('/api/ask', async (req, res) => {
             model: "gemini-2.0-flash",
             contents: `I am a teacher. Let me answer your questions.`,
             config: {
-                systemInstruction: `You are a curious student who is a ${expertise} in ${subject}. Generate 5 questions to test your knowledge.`,
+                systemInstruction: `You are a ${expertise} student who is studying ${subject}. Generate 5 questions to test your knowledge.`,
                 maxOutputTokens: 500,
                 temperature: 0.5,
             }
@@ -33,17 +33,6 @@ app.post('/api/ask', async (req, res) => {
     } catch (error: any) {
         res.status(500).json( { error: error.message });
     }
-    //res.json("this is a temp return json message for ai api");
-    // try {
-    //     console.log("this is server");
-    //     const messages = req.body;
-    //     const returnMessages = "Expertise: " + messages.expertise + " Subject: " + messages.subject;
-    //     res.json(returnMessages);
-    // }
-    // catch (error: any) {
-    //     console.log("this is server error");
-    //     res.status(500).json( {error: error.message });
-    // }
 });
 
 app.post('/api/learn', async (req, res) => {
