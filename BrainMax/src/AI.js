@@ -1,8 +1,7 @@
-//const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-//const client = new OpenAI({apiKey});
+import SERVER_URL from './config.ts';
 const AskAI = async (subject, expertise) => {
     try {
-        const response = await fetch('http://localhost:5000/api/ask', {
+        const response = await fetch(`${SERVER_URL}/api/ask`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

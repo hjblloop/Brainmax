@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import LEARNBlocks from './basic_materials/LEARNBlocks';
 import './LEARN.css';
+import SERVER_URL from '../config.ts';
 
 const LEARN = () => {
     const [LEARN, setLEARN] = useState({
@@ -34,7 +35,7 @@ const LEARN = () => {
     useEffect(() => {
         const fetchDates = async () => {
         const dateList = [];
-        const recordedDates = await fetch('http://localhost:5001/api/getdates');
+        const recordedDates = await fetch(`${SERVER_URL}/api/getdates`);
         const recordedDatesData = await recordedDates.json();
         for (let i=0; i < recordedDatesData.length; i++) {
                 const date = new Date(recordedDatesData[i].date).toLocaleDateString('en-US', {
@@ -52,7 +53,7 @@ const LEARN = () => {
     const handleDateClicked = async (date: string) => {
         try {
             const formattedDate = new Date(date).toISOString().split('T')[0];
-            const response = await fetch(`http://localhost:5001/api/learn/${formattedDate}`);
+            const response = await fetch(`${SERVER_URL}/api/learn/${formattedDate}`);
             if (response.ok) {
                 const data = await response.json();
                 setRetrievedLEARNData(data);
@@ -92,7 +93,7 @@ const LEARN = () => {
         };
 
         try {
-            const response = await fetch('http://localhost:5001/api/learn', {
+            const response = await fetch(`${SERVER_URL}/api/learn`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -104,7 +105,7 @@ const LEARN = () => {
                 alert('Thanks for learning!');
             } else {
                 alert('Error: ');
-            }
+            } 
         } catch (error) {
             console.error('Error: ', error);
             alert('couldnt connect to server');

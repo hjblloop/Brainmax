@@ -1,8 +1,9 @@
 import {ExpertiseLevelsType} from './types.ts';
+import SERVER_URL from '../../config.ts';
 
 const AskAI = async (subject: string, expertise: ExpertiseLevelsType | null) => {
     try {
-        const response = await fetch('http://localhost:5001/api/ask', {
+        const response = await fetch(`${SERVER_URL}/api/ask`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

@@ -35,6 +35,19 @@ app.post('/api/ask', async (req, res) => {
     }
 });
 
+// uncomment when deciding to go public
+// app.post('/api/create_account', async (req, res) => {
+//     const {username, password, email} = req.body;
+
+//     try {
+//         const result = await pool.query(
+//             `INSERT INTO users (username, password, email)
+//             VALUES ($1, $2, $3)
+//             `
+//         )
+//     }
+// })
+
 app.post('/api/learn', async (req, res) => {
     const { L, E, A, R, N, date } = req.body;
 
