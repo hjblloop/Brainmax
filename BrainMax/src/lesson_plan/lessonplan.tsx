@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-//import './lessonplan.css';
+// import 'tailwindcss';
+//import '../index.css';
 import Expertise from './Expertise.tsx'
 import {ExpertiseLevelsType} from './types.ts';
 import SERVER_URL from '../../config.ts';
@@ -70,10 +71,14 @@ const LessonPlan = () => {
     };
 
     return (
-        <div className="LessonPlan">
-            <button onClick={handleBackToHome} className="Back-Button">Back to Home</button>
-            <header className="LessonPlan-header">
-                <h1>Lesson Plan</h1>
+        <div>
+            <button 
+                type="button"
+                className="absolute top-6 left-6 bg-green-600 text-black px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+                onClick={handleBackToHome}>Back to Home
+            </button>
+            <div className="text-2xl w-full max-w-screen-xl flex flex-col items-center justify-center h-screen relative">
+                <h1 className="text-2xl font-bold text-center">Lesson Plan</h1>
                 <div className="LessonPlan-Something">
                     {!subjectButtonClicked ? (
                         <div className="Subject">
@@ -87,7 +92,7 @@ const LessonPlan = () => {
                         <div>
                             <div className="Topics">
                             <p>What topics are you studying in {subject}</p>
-                            <input type="text" onChange={handleTopicChange} placeholder="e.g. Quadratic Equations, Organic Reactions, Cell Biology" className="border-2 border-gray-300 rounded-md p-2"/>
+                            <input type="text" value= {topic} onChange={handleTopicChange} placeholder="e.g. Quadratic Equations, Organic Reactions, Cell Biology" className="border-2 border-gray-300 rounded-md p-2"/>
                             <button onClick={handleAddClick} className="Add-Button">Add More</button>
                             {addError && <div className="Error-Message">Please enter a topic</div>}
                             <button onClick={handleSubmitTopics} className="Submit-Button">Submit</button>
@@ -113,7 +118,7 @@ const LessonPlan = () => {
                 </div>
                 <Expertise onChange={setExpertise} initialValue={expertise}/>
                 <button className="CreateLessonPlanButton">Create a Lesson Plan</button>
-            </header>
+            </div>
         </div>
     )
 };

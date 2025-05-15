@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {ExpertiseLevels, ExpertiseLevelsType, ExpertiseLevelProps} from './types.ts';
-import 'tailwindcss';
 
 const Expertise: React.FC<ExpertiseLevelProps> = ({onChange, initialValue = null}) => {
     const [expertise, setExpertise] = useState<ExpertiseLevelsType | null>(initialValue);

@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import LEARNBlocks from './basic_materials/LEARNBlocks';
-import './LEARN.css';
+//import './LEARN.css';
 import SERVER_URL from '../config.ts';
 
 const LEARN = () => {

@@ -76,6 +76,37 @@ app.post('/api/learn', async (req, res) => {
     }
 });
 
+app.post('api/createlessonplan', async (req, res) => {
+    const { subject, topics, expertise } = req.body;
+
+    try {
+        const result = await pool.query(
+            `INSERT INTO lesson_plan (subject, topics, expertise)
+            VALUES ($1, $2, $3)`,
+            [subject, topics, expertise]
+        );
+        console.log('Lesson plan created: ', result.rows[0]);
+        res.status(201).json({ message: 'Lesson plan created successfully', data: result.rows[0]});
+    } catch (err: any) {
+        console.error('Error creating lesson plan: ', err.message);
+        res.status(500).json({ error: 'Error creating lesson plan' });
+    }
+});
+
+app.get('/api/getlessonplan', async (req, res) => {
+    const { subject } = req.body;
+
+    try {
+        const result = await pool.query(`
+            SELECT * FROM lesson_plan
+            WHERE subject = $1`, [subject]);
+        res.status(201).json(result.rows);
+    } catch (err: any) {
+        console.error('Error retrieving lesson plan: ', err.message);
+        res.status(500).json({ error: 'Error retrieving lesson plan' });
+    }
+});
+
 app.get('/api/users', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM users');
