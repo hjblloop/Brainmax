@@ -6,7 +6,11 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
     './src/**/*.{js,ts,jsx,tsx}'], // Include all source files
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        peach: '#fcd9bd',
+      }
+    },
   },
   plugins: [],
 };

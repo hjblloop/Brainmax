@@ -5,14 +5,23 @@ import Home from './Home.tsx';
 import Gong from './gong/gong.tsx';
 import LEARN from './LEARN.tsx';
 import LessonPlan from './lesson_plan/lessonplan.tsx';
-
+import ProtectedRoute from './ProtectedRoute.tsx';
+import Login from './login/login.tsx';
 
 function App() {
   console.log("App component rendered");
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} /> {/* Home page */}
+        <Route 
+          path="/" 
+          element={
+            <ProtectedRoute>
+              <Home />  {/* Home page */}
+            </ProtectedRoute>
+          } 
+        />
+        <Route path="/login" element={<Login />} /> {/* Login page */}
         <Route path="/gong" element={<Gong />} />  {/* Gong page */}
         <Route path="/LEARN" element={<LEARN />} /> {/* LEARN page */}
         <Route path="/LessonPlan" element={<LessonPlan />} /> {/* Lesson Plan page */}

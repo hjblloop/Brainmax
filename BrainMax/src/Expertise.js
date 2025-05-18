@@ -16,7 +16,7 @@ const Expertise = ({ onChange, initialValue = null }) => {
     ];
     return (<div>
             <p>
-                What is you level of expertise? 
+                What is your level of expertise? 
             </p>
             <div className="flex flex-row space-x-4 my-4">
             {expertiseOptions.map((expertiseOption) => (<div key={expertiseOption.value} onClick={() => handleExpertiseClick(expertiseOption.value)} className={`

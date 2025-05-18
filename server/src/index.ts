@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import pool from './db.js'; // Add `.js` extension
+import {pool, generalPool} from './db.js'; // Add `.js` extension
 import axios from 'axios';
 import { GoogleGenAI } from "@google/genai";
 
@@ -48,6 +48,24 @@ app.post('/api/ask', async (req, res) => {
 //     }
 // })
 
+app.post('/api/login', async (req, res) => {
+    const {username, password } = req.body;
+    try {
+        const result = await generalPool.query(
+            'SELECT * FROM users WHERE username = $1 AND password = $2',
+            [username, password]
+        );
+        if (result.rows.length > 0) {
+            res.json({ success: true, token: "fake-JWT-token" });
+        } else {
+            res.status(401).json({ success: false, message: 'Invalid username or password' });
+        }
+    } catch (err) {
+        res.status(500).json({ success: false, error: 'Server error:', err});
+        console.error(err);
+    }
+});
+
 app.post('/api/learn', async (req, res) => {
     const { L, E, A, R, N, date } = req.body;
 
@@ -76,7 +94,7 @@ app.post('/api/learn', async (req, res) => {
     }
 });
 
-app.post('api/createlessonplan', async (req, res) => {
+app.post('/api/createlessonplan', async (req, res) => {
     const { subject, topics, expertise } = req.body;
 
     try {
@@ -85,6 +103,9 @@ app.post('api/createlessonplan', async (req, res) => {
             VALUES ($1, $2, $3)`,
             [subject, topics, expertise]
         );
+        console.log('subject: ', subject);
+        console.log('topics: ', topics);
+        console.log('expertise: ', expertise);
         console.log('Lesson plan created: ', result.rows[0]);
         res.status(201).json({ message: 'Lesson plan created successfully', data: result.rows[0]});
     } catch (err: any) {
@@ -98,8 +119,7 @@ app.get('/api/getlessonplan', async (req, res) => {
 
     try {
         const result = await pool.query(`
-            SELECT * FROM lesson_plan
-            WHERE subject = $1`, [subject]);
+            SELECT * FROM lesson_plan`, [subject]);
         res.status(201).json(result.rows);
     } catch (err: any) {
         console.error('Error retrieving lesson plan: ', err.message);

@@ -4,6 +4,7 @@ import Subject from './Subject.tsx';
 //import AskAI from './AI.tsx';
 import 'tailwindcss';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 //import SERVER_URL from '../../config.ts';
 
 const Gong = () => {
@@ -32,8 +33,21 @@ const Gong = () => {
     
     return (
       <div className="Gong">
-        <header className="Gong-header">
-            <button onClick={handleBackToHome}>Back to Home</button>
+        {/* Top Navigation Bar */}
+        <nav className="fixed top-0 left-0 w-full bg-blue-600 text-white shadow z-50 flex items-center px-8 h-16">
+            <div className="flex space-x-8">
+                <Link to="/" className="hover:underline font-bold">Home</Link>
+                <Link to="/LessonPlan" className="hover:underline">Lesson Plan</Link>
+                <Link to="/LEARN" className="hover:underline">Learn</Link>
+                <Link to="/gong" className="hover:underline">Gong</Link>
+            </div>
+        </nav>
+        <header className="pt-20">
+            <button 
+              onClick={handleBackToHome}
+              className="border-2 rounded bg-orange-100 cursor-pointer">
+              Back to Home
+            </button>
           <p>
             Hello. I'm Gong. 
           </p>
