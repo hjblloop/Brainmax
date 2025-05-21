@@ -18,7 +18,9 @@ const Subject: React.FC<SubjectProps> = ({onChange, initialValue=""}) => {
 
     return (
         <div>
-            <p>What subject would you like to learn?</p>
+            <p>Practice by teaching me</p>
+            <p>what would you like to practice?</p>
+            <p>display different lesson plans in boxes here</p>
             <input type="text" placeholder="Enter subject" value={subject} onChange={handleChange} className="border-2 border-gray-300 rounded-md p-2"/>
         </div>
     );

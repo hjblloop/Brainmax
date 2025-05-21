@@ -9,7 +9,7 @@ const LEARNBlocks = ({letter, explanation, onChange}: { letter: string, explanat
                 type="text" 
                 placeholder={explanation}
                 onChange={(e) => onChange(e.target.value)}
-                className="w-64 h-12 text-lg ml-2 border rounded"/>
+                className="w-64 h-12 text-lg ml-2 border-2 rounded-sm"/>
         </div>
     )
 }

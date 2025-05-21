@@ -73,6 +73,39 @@ const Home = () => {
                         <button className="AccountCreationButton" onClick={handleAccountCreation}>Create Account</button>
                     </div> */}
                 </div>
+                {/* Contact Section */}
+                <section id="contact" className="py-20 px-8 sm:px-20">
+                    <h2 className="text-3xl font-bold text-center mb-8">Contact Me</h2>
+                    <form className="max-w-lg mx-auto space-y-4">
+                    <input
+                        type="text"
+                        placeholder="Your Name"
+                        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <input
+                        type="email"
+                        placeholder="Your Email"
+                        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <textarea
+                        placeholder="Your Message"
+                        rows={5}
+                        className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    ></textarea>
+                    <button
+                        type="submit"
+                        className="w-full py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+                    >
+                        Send Message
+                    </button>
+                    </form>
+                </section>
+                {/* Footer */}
+                <footer className="py-6 text-center bg-gray-300 dark:bg-gray-700">
+                    <p className="text-sm">
+                    © {new Date().getFullYear()} Jonathan. All rights reserved.
+                    </p>
+                </footer>
             </div>
             
         </div>

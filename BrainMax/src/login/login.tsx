@@ -27,7 +27,8 @@ const LoginPage = () => {
             });
             const data = await response.json();
             if (response.ok && data.success) {
-                localStorage.setItem('token', data.token); // Uncomment this line when implementing token storage
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('username', username);
                 console.log("logged in");
                 navigate('/');
             } else {

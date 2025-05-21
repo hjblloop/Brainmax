@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import {pool, generalPool} from './db.js'; // Add `.js` extension
 import axios from 'axios';
 import { GoogleGenAI } from "@google/genai";
+import * as operators from './operators';
 
 dotenv.config();
 const apiKey = process.env.OPENAI_API_KEY;
@@ -20,12 +21,13 @@ app.post('/api/ask', async (req, res) => {
     try {
         const expertise = req.body.expertise;
         const subject = req.body.subject;
+        const topic = req.body.topic;
         const response = await ai.models.generateContent({
             model: "gemini-2.0-flash",
-            contents: `I am a teacher. Let me answer your questions.`,
+            contents: `I am a ${subject} teacher. Let me answer your questions.`,
             config: {
-                systemInstruction: `You are a ${expertise} student who is studying ${subject}. Generate 5 questions to test your knowledge.`,
-                maxOutputTokens: 500,
+                systemInstruction: `You are a ${expertise} student who is studying ${topic}. Generate 5 questions to test your knowledge.`,
+                maxOutputTokens: 200,
                 temperature: 0.5,
             }
         });
@@ -95,22 +97,59 @@ app.post('/api/learn', async (req, res) => {
 });
 
 app.post('/api/createlessonplan', async (req, res) => {
-    const { subject, topics, expertise } = req.body;
+    let { subject, topics, expertise, username } = req.body;
+    [subject, topics, expertise, username] = operators.toLowerCaseAll(subject, topics, expertise, username)
 
+    const client = await pool.connect();
     try {
-        const result = await pool.query(
-            `INSERT INTO lesson_plan (subject, topics, expertise)
-            VALUES ($1, $2, $3)`,
-            [subject, topics, expertise]
+        await client.query('BEGIN');
+
+        console.log("username: ", username);
+        const subjectsRes = await client.query(
+            `WITH insert_result AS (
+                INSERT INTO subjects (userid, name) 
+                VALUES ((SELECT id FROM users WHERE username='${username}'), $1)
+                ON CONFLICT (userid, name) DO NOTHING
+                RETURNING id
+            )
+            SELECT id FROM insert_result
+            UNION
+            SELECT id FROM subjects WHERE (userid, name) = ((SELECT id FROM users WHERE username='${username}'), $1)`,
+            [subject]
         );
-        console.log('subject: ', subject);
-        console.log('topics: ', topics);
-        console.log('expertise: ', expertise);
-        console.log('Lesson plan created: ', result.rows[0]);
-        res.status(201).json({ message: 'Lesson plan created successfully', data: result.rows[0]});
+        const userSubjectId = subjectsRes.rows[0].id;
+
+        for (const topic of topics) {
+            await client.query(
+                `INSERT INTO topics (subject_id, name, expertise) 
+                VALUES ($1, $2, $3)
+                ON CONFLICT (subject_id, name) DO NOTHING`,
+                [userSubjectId, topic, expertise]
+            );
+        }
+        
+        await client.query('COMMIT');
+        res.status(201).json({ message: 'Successfully created lesson plan'});
     } catch (err: any) {
+        await client.query('ROLLBACK');
         console.error('Error creating lesson plan: ', err.message);
         res.status(500).json({ error: 'Error creating lesson plan' });
+    } finally {
+        client.release();
+    }
+});
+
+app.get('/api/getquestions', async (req,res) => {
+    const topicId = req.query.topicId;
+
+    try {
+        const response = await generalPool.query(`
+            SELECT question, expertise FROM questions
+            WHERE topicid='${topicId}'`);
+        res.status(201).json(response.rows);
+    } catch (err: any) {
+        console.error('Error retrieving questions for topic: ', err.message);
+        res.status(500).json({ error: 'Error retrieving questions'});
     }
 });
 
@@ -126,6 +165,35 @@ app.get('/api/getlessonplan', async (req, res) => {
         res.status(500).json({ error: 'Error retrieving lesson plan' });
     }
 });
+
+app.get('/api/getsubjects', async (req, res) => {
+    const username = req.query.username;
+
+    try {
+        const response = await generalPool.query(`
+            SELECT name, id FROM subjects
+            WHERE userid = (SELECT id FROM users WHERE username='${username}')`);
+        res.status(201).json(response.rows);
+    } catch (err: any) {
+        console.error('Error retrieving subjects: ', err.message);
+        res.status(500).json({error: 'Error retrieving subjects'});
+    }
+});
+
+app.get('/api/gettopics', async (req, res) => {
+    const subjectId = req.query.subjectId;
+
+    try {
+        const response = await generalPool.query(`
+            SELECT id, name, expertise FROM topics
+            WHERE subject_Id=${subjectId}`);
+        res.status(201).json(response.rows);
+        console.log(response.rows);
+    } catch (err: any) {
+        console.error('Error retrieving topics for subject ID: ', subjectId, ' : ', err.message);
+        res.status(500).json({error: 'Error retrieving topics'});
+    }
+})
 
 app.get('/api/users', async (req, res) => {
     try {
