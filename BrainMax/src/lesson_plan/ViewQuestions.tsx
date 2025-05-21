@@ -1,31 +1,35 @@
-const ViewQuestions = ({fetchedQuestions, topicName, expertise, subject, handleBackToLessonPlan, handleGenerateQuestions}: 
-    {fetchedQuestions: string[], topicName: string, expertise: string, subject: string,
-        handleBackToLessonPlan: () => void, handleGenerateQuestions: (topicName:string, expertise: string, subject: string) => void}) => {
-    return (
+const ViewQuestions = ({fetchedQuestions, topicName, topicId, expertise, subject, handleBackToLessonPlan, handleGenerateQuestionsLessonPlan}: 
+    {fetchedQuestions: string[], topicName: string, topicId: number, expertise: string, subject: string,
+        handleBackToLessonPlan: () => void, handleGenerateQuestionsLessonPlan: (topicId: number, topicName:string, expertise: string, subject: string) => void}) => {
+        return (
         <div className="flex flex-col">
-            <button
+            <button 
                 onClick={handleBackToLessonPlan}
-                className="border-2 rounded bg-blue-500 cursor-pointer">
-                Back to Lesson Plan
+                className="text-sm absolute top-4 left-4 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition cursor-pointer">
+                Back to Lesson Plans
             </button>
-            List of questions for {topicName}
-            <div>
-                {fetchedQuestions.length > 0 ? (
-                    fetchedQuestions.map((question) => (
-                    <div key={question}>
-                        question: {question}
-                    </div>))
-                ) : (
-                    <div>
-                        looks like you don't have any questions.
-                    </div>
-                )}
-                <button 
-                    onClick={() => handleGenerateQuestions(topicName, expertise, subject)}
-                    className="border-2 rounded bg-blue-500 cursor-pointer">
-                    Generate Questions
-                </button>
+            <div className="mt-8 flex flex-col">
+                <span className="text-5xl text-blue-700 p-2 rounded">List of questions for {topicName}</span>
+                <span className="text-3xl">Level: {expertise}</span>
+                <div className="mt-4">
+                    {fetchedQuestions[0] != null ? (
+                        fetchedQuestions.map((question, index) => (
+                        <div key={index} className="border mt-2 rounded bg-blue-200 border-blue-200 p-2">
+                            {index + 1}: {question}
+                        </div>))
+                    ) : (
+                        <div className="text-3xl">
+                            Looks like you don't have any questions.
+                        </div>
+                    )}
+                    <button 
+                        onClick={() => handleGenerateQuestionsLessonPlan(topicId, topicName, expertise, subject)}
+                        className="mb-6 mt-6 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition cursor-pointer">
+                        Generate Questions
+                    </button>
+                </div>
             </div>
+            
         </div>
     )
 };

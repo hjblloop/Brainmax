@@ -4,11 +4,11 @@ const ViewLessonPlan = ({subject, topics, handleBackToLessonPlan, handleViewQues
     
     return (
     <div>
-        <button
-            className="rounded border-2 bg-blue-700 cursor-pointer" 
-            onClick={handleBackToLessonPlan}>
-            Back To Lesson Plan
-        </button>
+        <button 
+                onClick={handleBackToLessonPlan}
+                className="text-sm absolute top-4 left-4 bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition cursor-pointer">
+                Back to Lesson Plans
+            </button>
         <p 
             className="font-bold text-3xl text-blue-700">
             Subject: {subject}
@@ -16,7 +16,7 @@ const ViewLessonPlan = ({subject, topics, handleBackToLessonPlan, handleViewQues
         {topics.map((topic) => (
             <div>
                 <button
-                    className="border-2 cursor-pointer bg-blue-400 rounded-2 mt-2 p-2"
+                    className="rounded cursor-pointer bg-red-400 mt-2 shadow-sm text-4xl p-2"
                     onClick={() => handleViewQuestions(topic["id"], topic["name"], topic["expertise"])}>
                     View questions for {topic["name"]}
                 </button>

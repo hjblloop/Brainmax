@@ -15,6 +15,7 @@ const LessonPlan = () => {
     const [selectedSubject, setSelectedSubject] = useState("");
     const [fetchedQuestions, setFetchedQuestions] = useState([]);
     const [topicName, setTopicName] = useState<string>("");
+    const [topicId, setTopicId] = useState<number>();
     const [topicExpertise, setTopicExpertise] = useState<string>("");
 
     const username = localStorage.getItem('username');
@@ -54,20 +55,55 @@ const LessonPlan = () => {
         }
     };
 
-    const handleViewQuestions = async (topicId: number, topicName: string, topicExpertise: string) => {
+    const handleGetQuestions = async (topicId: number) => {
         const response = await fetch(`${SERVER_URL}/api/getquestions?topicId=${topicId}`,{
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
         });
         if (response.ok){
+            return response;
+        }
+    };
+
+    const handleViewQuestions = async (topicId: number, topicName: string, topicExpertise: string) => {
+        const response = await handleGetQuestions(topicId);
+        if (response){
             setTopicName(topicName);
             setTopicExpertise(topicExpertise);
+            setTopicId(topicId);
             setFetchedQuestions(await response.json());
             setView("viewQuestions");
         }
     };
 
+    const handleGenerateQuestionsLessonPlan = async (topicId: number, topic: string, expertise: string, subject: string) => {
+        try {
+            await handleGenerateQuestions(topic, expertise, subject);
+            await handleGetQuestions(topicId);
+        } catch (err: any) {
+            console.log("Error in generating questions: ", err);
+        }
+    }
+
+    const isQuestionLimit = async () => {
+        try {
+            const response = await fetch(`${SERVER_URL}/api/isquestionlimit?username=${username}`, {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'},
+            });
+            const result = await response.json();
+            console.log("limit hit: ", result);
+            return result.limitReached ?? false;
+        } catch (err: any){
+            console.error("Error checking question limit")
+            return true;
+        }  
+    };
+
     const handleGenerateQuestions = async (topic: string, expertise: string, subject: string) => {
+        if (await isQuestionLimit()){
+            return;
+        }
         try {
             const generatedQuestions = await AskAI(subject, expertise, topic);
             const questionsList = generatedQuestions.split('\n');
@@ -107,7 +143,7 @@ const LessonPlan = () => {
                 </div>
             </nav>
 
-            <div className="min-h-screen flex flex-col items-center justify-center">
+            <div className="min-h-screen flex flex-col items-center justify-center mt-5">
                 <div className="text-2xl w-full rounded-2xl bg-[#fcd9bd] max-w-screen-xl flex flex-col items-center p-6 relative">
                     {view === "lessonPlanPage" && <LessonPlanPage 
                         onCreateLessonPlan={handleGoToLessonPlan} 
@@ -125,7 +161,8 @@ const LessonPlan = () => {
                         subject={selectedSubject}
                         expertise={topicExpertise}
                         topicName={topicName}
-                        handleGenerateQuestions={handleGenerateQuestions}
+                        topicId={topicId ?? 0}
+                        handleGenerateQuestionsLessonPlan={handleGenerateQuestionsLessonPlan}
                         handleBackToLessonPlan={handleBackToLessonPlan}/>}
                 </div>
             </div>

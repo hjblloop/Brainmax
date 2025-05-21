@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import {pool, generalPool} from './db.js'; // Add `.js` extension
@@ -24,9 +24,9 @@ app.post('/api/ask', async (req, res) => {
         const topic = req.body.topic;
         const response = await ai.models.generateContent({
             model: "gemini-2.0-flash",
-            contents: `I am a ${subject} teacher. Let me answer your questions.`,
+            contents: `Generate five ${subject} questions, suitable for a ${expertise} student, presented as a non-numbered list:`,
             config: {
-                systemInstruction: `You are a ${expertise} student who is studying ${topic}. Generate 5 questions to test your knowledge.`,
+                systemInstruction: `Five ${subject} questions, suitable for a ${expertise} student, presented as a non-numbered list:`,
                 maxOutputTokens: 200,
                 temperature: 0.5,
             }
@@ -87,12 +87,81 @@ app.post('/api/learn', async (req, res) => {
             [L, E, A, R, N, date]
         );
 
-        console.log('Data saved:', result.rows[0]);
-
         res.status(201).json({ message: 'Data saved successfully', data: result.rows[0]});
     } catch (err: any) {
         console.error('Error saving data to database:', err.message);
         res.status(500).json({ error: 'Error saving data to database' });
+    }
+});
+
+app.get('/api/isquestionlimit', async (req, res): Promise<any> => {
+    const username = req.query.username;
+    try {
+        const result = await generalPool.query(`
+            SELECT questions_generated, questions_limit FROM users
+            WHERE username=$1`,
+            [username]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        const { questions_generated, questions_limit } = result.rows[0];
+        const limitReached = questions_generated >= questions_limit;
+        res.status(201).json({ limitReached });
+    } catch (err: any) {
+        console.error('Error checking limit: ', err);
+        res.status(500).json({ error: 'Error checking question limit' });
+    }
+});
+
+app.post('/api/savequestions', async (req, res) => {
+    const {questionsList, expertise, subject, topic, username}: 
+        {questionsList:string[], expertise: string, subject: string, topic: string, username: string} = req.body;
+
+    try {
+        await generalPool.query('BEGIN');
+
+        await generalPool.query(`
+            INSERT INTO topics (subject_id, name, expertise, questions)
+            VALUES (
+                (SELECT id FROM subjects WHERE userid=(SELECT id FROM users WHERE username=$1)
+                AND name=$2),
+                $3,
+                $4,
+                $5
+            )
+            ON CONFLICT (subject_id, name, expertise)
+            DO UPDATE SET questions = topics.questions || EXCLUDED.questions;
+        `,
+        [username, subject, topic, expertise, questionsList]);
+
+        await generalPool.query(`
+            UPDATE users
+            SET questions_generated = questions_generated + 5
+            WHERE username=$1
+            `,[username]);
+
+        await generalPool.query('COMMIT');
+        
+        res.status(201).json({ success: true, message: 'Questions saved successfully.' });
+    } catch (err: any){
+        console.error("Error saving question: ", err);
+        if (
+            err.message.includes('index row size') &&
+            err.message.includes('exceeds btree maximum')
+        ) {
+            res.status(400).json({
+                success: false,
+                errorCode: 'BTREE_INDEX_TOO_LARGE',
+                message: 'Too many questions generated.'
+            });
+        } else {
+            res.status(500).json({
+                success: false,
+                errorCode: 'UNKNOWN_DB_ERROR',
+                message: 'An unexpected error occurred while saving your data.',
+            });
+        }
     }
 });
 
@@ -104,7 +173,7 @@ app.post('/api/createlessonplan', async (req, res) => {
     try {
         await client.query('BEGIN');
 
-        console.log("username: ", username);
+        {/* Save subject */}
         const subjectsRes = await client.query(
             `WITH insert_result AS (
                 INSERT INTO subjects (userid, name) 
@@ -118,7 +187,8 @@ app.post('/api/createlessonplan', async (req, res) => {
             [subject]
         );
         const userSubjectId = subjectsRes.rows[0].id;
-
+        
+        {/*Save topics */}
         for (const topic of topics) {
             await client.query(
                 `INSERT INTO topics (subject_id, name, expertise) 
@@ -144,9 +214,14 @@ app.get('/api/getquestions', async (req,res) => {
 
     try {
         const response = await generalPool.query(`
-            SELECT question, expertise FROM questions
-            WHERE topicid='${topicId}'`);
-        res.status(201).json(response.rows);
+            SELECT questions FROM topics
+            WHERE id='${topicId}'`);
+        let allParts: string[] = [];
+        if (response.rows[0].questions != null) {
+            const cleanedQuestions = operators.clean(response.rows[0].questions);
+            allParts = cleanedQuestions.flatMap((s: string) => s.split(/\n\n/));
+        }
+        res.status(201).json(allParts);
     } catch (err: any) {
         console.error('Error retrieving questions for topic: ', err.message);
         res.status(500).json({ error: 'Error retrieving questions'});
@@ -188,7 +263,6 @@ app.get('/api/gettopics', async (req, res) => {
             SELECT id, name, expertise FROM topics
             WHERE subject_Id=${subjectId}`);
         res.status(201).json(response.rows);
-        console.log(response.rows);
     } catch (err: any) {
         console.error('Error retrieving topics for subject ID: ', subjectId, ' : ', err.message);
         res.status(500).json({error: 'Error retrieving topics'});

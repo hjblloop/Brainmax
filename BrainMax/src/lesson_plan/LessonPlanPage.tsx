@@ -4,18 +4,16 @@ const LessonPlanPage = ({ fetchedSubjects, onCreateLessonPlan, onSubjectClick }:
     return(
         <div className="w-full flex flex-col items-center justify-center">
             {fetchedSubjects && (
-                <div className="w-full max-w-lg bg-white rounded-lg shadow p-6">
-                    <div>
-                        <span className="font-semibold">Select a lesson plan:</span>
+                <div className="w-full max-w-lg">
+                    <span className="font-semibold">Select a lesson plan:</span>
                         <div className="flex flex-col">
-                            {fetchedSubjects.map((subject) => (
+                            {fetchedSubjects.map((subject: { name: string; id: number }) => (
                                 <button 
-                                    className="rounded cursor-pointer bg-red-400 mt-2"
+                                    className="rounded cursor-pointer bg-red-400 mt-2 shadow-sm text-4xl p-2"
                                     key={subject["id"]} onClick={() => onSubjectClick(subject["id"],subject["name"])}>{subject["name"]}
                                 </button>
                             ))}
                         </div>
-                    </div>
                     <div>
                 </div>
             </div>

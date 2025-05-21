@@ -7,3 +7,8 @@ export function toLowerCaseAll(...args: (string | string[])[]): (string | string
         }
     });
 };
+
+export function clean(rawString: string[]){
+    // return rawString.map((thing) => thing.replace(/\\n/g, '\n').replace(/\.  \*\*/g, ''));
+    return rawString.map((thing) => thing.replace(/\\n/g, '\n'));
+};

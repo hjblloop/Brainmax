@@ -65,7 +65,7 @@ const CreateLessonPage = ({handleBackToLessonPlan}:
                 handleBackToLessonPlan();
             }
         }
-    }
+    };
 
     return (
         <div className="text-2xl w-full rounded-2xl bg-[#fcd9bd] max-w-screen-xl flex flex-col items-center relative">
