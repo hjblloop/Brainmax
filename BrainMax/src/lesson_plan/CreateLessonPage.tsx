@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import Expertise from './Expertise.tsx';
 import {ExpertiseLevelsType} from './types.ts';
-import SERVER_URL from '../../config.ts';
+import SERVER_URL from '../config.ts';
 
 const CreateLessonPage = ({handleBackToLessonPlan}: 
     {handleBackToLessonPlan: () => void}) => {

@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import SERVER_URL from '../config';
+import SERVER_URL from './config';
 
 const AccountCreation = () => {
     const [formData, setFormData] = useState({

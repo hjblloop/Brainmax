@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import LEARNBlocks from './basic_materials/LEARNBlocks';
 import { Link } from 'react-router-dom';
-import SERVER_URL from '../config.ts';
+import SERVER_URL from './config.ts';
 
 const LEARN = () => {
     const [LEARN, setLEARN] = useState({

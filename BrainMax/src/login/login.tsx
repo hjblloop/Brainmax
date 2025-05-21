@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import SERVER_URL from '../../config.ts';
+import SERVER_URL from '../config.ts';
 import ContactMe from '../ContactMe.tsx';
 
 const LoginPage = () => {

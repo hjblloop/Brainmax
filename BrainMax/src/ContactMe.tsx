@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import SERVER_URL from '../config.ts'
+import SERVER_URL from './config.ts'
 const ContactMe = () => {
     const [contactName, setContactName] = useState('');
     const [contactEmail, setContactEmail] = useState('');

@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import './lessonplan.css';
-import SERVER_URL from '../../config.ts';
+import SERVER_URL from '../config.ts';
 import { Link } from 'react-router-dom';
 import LessonPlanPage from './LessonPlanPage.tsx';
 import CreateLessonPage from './CreateLessonPage.tsx';

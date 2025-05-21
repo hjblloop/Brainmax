@@ -1,5 +1,5 @@
 //import {ExpertiseLevelsType} from '../basic_materials/types.ts';
-import SERVER_URL from '../../config.ts';
+import SERVER_URL from '../config.ts';
 
 const AskAI = async (subject: string, expertise: string, topic: string) => {
     try {
