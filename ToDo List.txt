@@ -1,0 +1,4 @@
+Incorporate interval learning through pushing a button
+Create a mobile friendly version for quick studying such as in gym or during commute
+Polish up UI
+Have users input answers to questions and give them a grade based on answers
