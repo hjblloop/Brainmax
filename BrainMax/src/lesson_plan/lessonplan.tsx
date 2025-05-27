@@ -17,6 +17,7 @@ const LessonPlan = () => {
     const [topicName, setTopicName] = useState<string>("");
     const [topicId, setTopicId] = useState<number>();
     const [topicExpertise, setTopicExpertise] = useState<string>("");
+    const [loadingQuestions, setLoadingQuestions] = useState<boolean>(false);
 
     const username = localStorage.getItem('username');
 
@@ -78,11 +79,13 @@ const LessonPlan = () => {
 
     const handleGenerateQuestionsLessonPlan = async (topicId: number, topic: string, expertise: string, subject: string) => {
         try {
+            setLoadingQuestions(true);
             await handleGenerateQuestions(topic, expertise, subject);
             await handleGetQuestions(topicId);
         } catch (err: any) {
             console.log("Error in generating questions: ", err);
         }
+        setLoadingQuestions(false);
     }
 
     const isQuestionLimit = async () => {
