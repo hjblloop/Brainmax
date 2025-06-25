@@ -25,6 +25,7 @@ function App() {
         <Route path="/gong" element={<Gong />} />  {/* Gong page */}
         <Route path="/LEARN" element={<LEARN />} /> {/* LEARN page */}
         <Route path="/LessonPlan" element={<LessonPlan />} /> {/* Lesson Plan page */}
+        <Route path="/Test" element={<LessonPlan />} /> {/*Test Page*/}
       </Routes>
     </Router>
   );
