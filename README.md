@@ -1,6 +1,6 @@
 # GongBu
 Showcase for GongBu, an AI-powered learning tool.
-The purpose of this project is to help people learn, retain, and master specific topics through lowering the barrier of entry of researching a topic by simply and clicking through the project.
+The purpose of this project is to help people learn, retain, and master specific topics through lowering the barrier of entry of researching a topic by simply clicking through the project.
 
 You can create your own lesson plan on whatever subject youre studying.
 ![Creating Lesson Page](pictures/CreateLessonPlan1.png)
