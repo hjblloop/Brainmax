@@ -15,6 +15,7 @@ const AskAI = async (subject, expertise) => {
         return `Error: ${error.message}`;
     }
 };
+// Add multithreading to AI training
 // const AskAI = async (subject: string, expertise: ExpertiseLevelsType | null) =>{
 //     try {
 //         const completion = await client.chat.completions.create({
